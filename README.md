@@ -21,3 +21,6 @@ WP_ENV='production'
 
 #### 2.	Add Code Snippet:
 Add the following code to your theme’s functions.php file (in Sage, this file is typically located in app/setup.php) or to a custom plugin.
+
+
+#WordPress #Advanced Custom Fields #ACF #Bedrock #Sage #Roots.io #Production Mode #WordPress Security #WordPress Customization #Environment Variables
