@@ -1,0 +1,56 @@
+/**
+ * Check if the environment is set to production mode.
+ *
+ * @return bool True if the environment is production, false otherwise.
+ */
+function is_production_mode(): bool
+{
+    return defined('WP_ENV') && WP_ENV === 'production';
+}
+
+/**
+ * Remove the ACF menu from the admin menu if in production mode.
+ *
+ * @return void
+ */
+function remove_acf_menu(): void
+{
+    if (is_production_mode()) {
+        remove_menu_page('edit.php?post_type=acf-field-group');
+    }
+}
+add_action('admin_menu', 'remove_acf_menu', 999);
+
+/**
+ * Remove the ACF menu from the admin bar if in production mode.
+ *
+ * @param WP_Admin_Bar $wp_admin_bar The WP_Admin_Bar instance.
+ *
+ * @return void
+ */
+function remove_acf_admin_bar_menu(WP_Admin_Bar $wp_admin_bar): void
+{
+    if (is_production_mode()) {
+        $wp_admin_bar->remove_node('acf');
+    }
+}
+add_action('admin_bar_menu', 'remove_acf_admin_bar_menu', 999);
+
+/**
+ * Restrict access to ACF pages if in production mode.
+ *
+ * @return void
+ */
+function restrict_acf_pages(): void
+{
+    if (is_production_mode()) {
+        global $pagenow;
+        $acf_pages = array('edit.php', 'post.php', 'post-new.php');
+
+        if (in_array($pagenow, $acf_pages) && isset($_GET['post_type']) && $_GET['post_type'] === 'acf-field-group') {
+            wp_redirect(admin_url());
+            exit;
+        }
+    }
+}
+add_action('admin_init', 'restrict_acf_pages');
